@@ -174,6 +174,14 @@ withokta aws default "$@"
 EOF
 chmod +x "${PREFIX}/bin/awscli"
 
+# okta-login
+cat <<'EOF' >"${PREFIX}/bin/okta-login"
+#!/bin/sh
+# Use via "eval $(okta-login)"
+okta-credential_process | jq -r '@sh "AWS_ACCESS_KEY_ID=\(.AccessKeyId);AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey);AWS_SESSION_TOKEN=\(.SessionToken);export AWS_ACCESS_KEY_ID;export AWS_SECRET_ACCESS_KEY;export AWS_SESSION_TOKEN;"'
+EOF
+chmod +x "${PREFIX}/bin/okta-login"
+
 # Configure Okta AWS CLI
 mkdir -p ${HOME}/.okta                       # `config.properties` must
 oktaConfig="${HOME}/.okta/config.properties" # reside in ~/.okta.
